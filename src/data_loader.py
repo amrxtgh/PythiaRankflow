@@ -18,7 +18,7 @@ class DataLoader:
 		)
 	def load_movies(self):
 		return pd.read_csv(
-			os.path.join(self.data_path, "ratings.dat"),
+			os.path.join(self.data_path, "movies.dat"),
 			sep="::",
 			engine="python",
 			names=["movie_id", "title", "genre"],
