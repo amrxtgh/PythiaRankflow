@@ -1,8 +1,8 @@
-# tiny-rankflow
+# PythiaRankflow
 
 https://grouplens.org/datasets/movielens/1m/
 
-# "How can we systematically combine and enhance classical recommendation models to achieve state-of-the-art performance on this specific dataset, without using deep learning?"
+**"How can we systematically combine and enhance classical recommendation models to achieve state-of-the-art performance on this specific dataset, without using deep learning?"**
 
 look up to this
 
