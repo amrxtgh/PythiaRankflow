@@ -36,7 +36,7 @@ look up to this
 - Keep only movies who got at least 20 reviews
 - Removes everything else
 
-	2. **Temporal Split**
+	2. Temporal Split
 - Instead of the random 80/20 split we split by time the older data trains and newer data tests(sort each user's rating by `timestamp`)
 
 `Raw data(1M ratings)-> K-Core Filtering (removes noise, sparse users/items) -> Clean Dense Data -> Temporal Split(honest train/test split) -> Train Set -> Fit SVD, KNN, NMF Test Set -> Evaluate RMSE, MAE`
