@@ -32,10 +32,13 @@ Implement collaborative filtering with content based filtering that uses item me
 0. Exploratory Data Analysis
 - Data Sparsity & Power-Law verifiction: Computing the global densisty of the matrix
 (tells us why the single matrix factorization fails and we can justify using two stage candidate retrieval + GBDT ranking architecture)
+
 - Bias formulation. -> Optimistic vs Pessimistic raters
 (calculate the mean rating for each user and plot a distribution histogram)
 (some user has mean rating of 4.5(optimistic) while other sits at 2.1(pessimistic). This variation justifies substracting the user's mean from explicit ratings during feature engineering to expose **true relative preference**, minimizing user bias)
+
 - Item Popularity and Long tail Problem: Sort movies by their interaction count in descending order. Plot the interaction count (Y-axis) against the sorted item index(X-index). Highlight the point where 80% of all the interaction are exhausted Popularity and Long tail Problem: Sort movies by their interaction count in descending order. Plot the interaction count (Y-axis) against the sorted item index(X-index). Highlight the point where 80% of all the interaction are exhausted.
+
 - Temporal drift tracking: Dividing the dataset's chronological timeline into 10 buckets. Plot the preference shift dynamically, providing empirical proof for why a random 80/20 train/test split suffers from future data leakage, validating the choice of the strict temporal split.
 
 
