@@ -8,14 +8,15 @@ look up to this
 
 - data sparsity checking
 - rating bias
+- cold bias
 - long tail problem
 
-- EDA
-- preprocessing(K-Core+Temporal Split)
-- Feature Engineering(Create rich tabular features)
+- EDA --> informed data pruning and Constraint Verification
+- preprocessing(K-Core filtering)
+- Data splitting(Temporal Split/cross validation)
+- Feature Engineering(Create rich tabular features/calculated ONLY on train sets)
 - Ranking(Use gradient boosting to combine everything)
-- Train/Test split
-- Classical Models
+- Model Training(Classical Models & Gradient Boost)
 - Evaluation - RMSE, MAE, Precision@K
 - Compare accross models
 
@@ -28,6 +29,16 @@ Implement collaborative filtering with content based filtering that uses item me
 
 # What i think i am gonna do 
 
+0. Exploratory Data Analysis
+- Data Sparsity & Power-Law verifiction: Computing the global densisty of the matrix
+(tells us why the single matrix factorization fails and we can justify using two stage candidate retrieval + GBDT ranking architecture)
+- Bias formulation. -> Optimistic vs Pessimistic raters
+(calculate the mean rating for each user and plot a distribution histogram)
+(some user has mean rating of 4.5(optimistic) while other sits at 2.1(pessimistic). This variation justifies substracting the user's mean from explicit ratings during feature engineering to expose **true relative preference**, minimizing user bias)
+- Item Popularity and Long tail Problem: Sort movies by their interaction count in descending order. Plot the interaction count (Y-axis) against the sorted item index(X-index). Highlight the point where 80% of all the interaction are exhausted Popularity and Long tail Problem: Sort movies by their interaction count in descending order. Plot the interaction count (Y-axis) against the sorted item index(X-index). Highlight the point where 80% of all the interaction are exhausted.
+- Temporal drift tracking: Dividing the dataset's chronological timeline into 10 buckets. Plot the preference shift dynamically, providing empirical proof for why a random 80/20 train/test split suffers from future data leakage, validating the choice of the strict temporal split.
+
+
 1. **Preprocessing**
 	1. k-core filtering
 - Keep only users who rated at least 20 movies
@@ -39,7 +50,7 @@ Implement collaborative filtering with content based filtering that uses item me
 
 `Raw data(1M ratings)-> K-Core Filtering (removes noise, sparse users/items) -> Clean Dense Data -> Temporal Split(honest train/test split) -> Train Set -> Fit SVD, KNN, NMF Test Set -> Evaluate RMSE, MAE`
 
-2. **Implementing the baselines(we need to record RMSE, MAE, Precision@10)**
+2. **Implementing the baselines(we need to record RMSE, MAE, Precision@10, Recall@K)**
 
 **Surprise library** it implements things out of the box(scikit learn but for recommendation system)
 - Global Popularity 
@@ -81,4 +92,7 @@ Group D(Implicit Signals Weighted)
 - Training (200 candidate movies, we know the true rating the user gave, We gotta frame this as Regression task(predict the rating)) or Ranking test (use lambdarank objective to optimize NDCG)
 - Feed into lightgbm
 
-
+6. Evaluation of the model and the error function
+- ROC curves
+- visually plot
+- Precision@K
