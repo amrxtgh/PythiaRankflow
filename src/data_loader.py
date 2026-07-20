@@ -2,12 +2,11 @@ import os
 import pandas as pd
 
 class DataLoader:
-	"""
-	Loads MovieLens 1M dataset in the clean format for recommendation research.
-	"""
+	""" Loads MovieLens 1M dataset in the clean format for recommendation research."""
+
 	def __init__(self, data_path):
 		self.data_path = data_path
-	
+
 	def load_rating(self):
 		return pd.read_csv(
 			os.path.join(self.data_path, "ratings.dat"),
@@ -39,8 +38,4 @@ class DataLoader:
 		users = self.load_users()
 
 		data = ratings.merge(movies, on="movie_id").merge(users, on="user_id")
-
 		return data
-
-
-	
