@@ -1,0 +1,4 @@
+users=6040
+movies=3706
+ratings=5
+density=0.000000
