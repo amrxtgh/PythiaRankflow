@@ -13,15 +13,15 @@ class DataLoader:
 			sep="::",
 			engine="python",
 			names=["user_id", "movie_id", "rating", "timestamp"],
-			encoding="latin-1"
+            encoding = "latin-1"
 		)
 	def load_movies(self):
 		return pd.read_csv(
 			os.path.join(self.data_path, "movies.dat"),
 			sep="::",
 			engine="python",
-			names=["movie_id", "title", "genre"],
-			encoding="latin-1"
+			names=["movie_id", "title", "genres"],
+            encoding = "latin-1"
 		)
 	def load_users(self):
 		return pd.read_csv(
@@ -29,7 +29,7 @@ class DataLoader:
 			sep="::",
 			engine="python",
 			names=["user_id", "gender", "age", "occupation", "zip_code"],
-			encoding="latin-1"
+            encoding = "latin-1"
 		)
 
 	def load_full_dataset(self):
