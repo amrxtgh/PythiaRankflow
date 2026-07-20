@@ -71,6 +71,7 @@ Implement collaborative filtering with content based filtering that uses item me
 
 4. **Feature Engineering for the GBDT**
 
+
 For the 200-300 candidate movies, we create the feature vector for that(User, Movie) pair.
 And we inject the "hybrid" approach.
 
