@@ -46,6 +46,26 @@ def k_core_filter(
 
     return filtered.reset_index(drop=True)
 
+def cold_start_statistics(
+        ratings: pd.DataFrame,
+        filtered: pd.DataFrame,
+        k: int = 20,
+    ) -> dict:
+    before_users = int((ratings["user_id"].value_counts() < k).sum())
+    before_items = int((ratings["movie_id"].value_counts() < k).sum())
+
+    after_users = int((filtered["user_id"].value_counts() < k).sum())
+    after_items = int((filtered["movie_id"].value_counts() < k).sum())
+
+    return {
+            "before_users": before_users,
+            "before_items": before_items,
+            "after_users": after_users,
+            "after_items": after_items,
+            "k": k,
+    }
+        
+
 
 def temporal_split(
         ratings: pd.DataFrame,
@@ -68,10 +88,43 @@ def temporal_split(
         (train, test) split by time.
     """
 
-    sorted_ratings = ratings.sort_values("timestamp").reset_index(drop=True)
-    split_idx = int(len(sorted_ratings) * train_ratio)
+    train_frames = []
+    test_frames = []
 
-    train = sorted_ratings.iloc[:split_idx]
-    test = sorted_ratings.iloc[split_idx:]
+    for _, group in ratings.groupby("user_id"):
+        group = group.sort_values("timestamp")
+        cutoff = int(len(group) * train_ratio)
+        if cutoff == 0:
+            continue
+        train_frames.append(group.iloc[:cutoff])
+        test_frames.append(group.iloc[cutoff:])
 
-    return train, test
+    train_df = pd.concat(train_frames).reset_index(drop=True) if train_frames else pd.DataFrame()
+    test_df = pd.concat(test_frames).reset_index(drop=True) if test_frames else pd.DataFrame()
+    return train_df, test_df
+
+def verify_temporal_split(
+        train_df: pd.DataFrame,
+        test_df: pd.DataFrame,
+        ) -> None:
+    """
+    Verify no overlap and per-user temporal ordering.
+    """
+    overlap = train_df.merge(
+            test_df,
+            on=["user_id", "movie_id", "rating", "timestamp"],
+            how="inner",
+    )
+    assert overlap.empty, f"Train/Test overlap: {len(overlap)} rows"
+
+    for user in train_df["user_id"].unique():
+        train_t = train_df.loc[train_df["user_id"] == user, "timestamp"]
+        test_t = test_df.loc[test_df["user_id"] == user, "timestamp"]
+
+        if len(test_t) == 0:
+            continue
+
+        assert train_t.max() <= test_t.min(), {
+                f"Temporal leakage for user {user}: "
+                f"train max {train_t.max()} > test min {test_t.min()}"
+        }
