@@ -10,7 +10,7 @@ from data_loader import DataLoader
 from data_preprocessing import k_core_filter, temporal_split
 
 # --- Load and prepare data ---
-loader = DataLoader("data/ml-1m")
+loader = DataLoader("dataset/ml-1m")
 ratings = loader.load_rating()
 movies = loader.load_movies()
 
@@ -93,9 +93,9 @@ def cb_predict(user_id, movie_id):
     return cosine_similarity(user_vec, item_vec)[0, 0] * 4 + 1  # scale to 1-5 approx
 
 
-# Evaluate CBF quickly on a subset
+# Evaluate CBF on full test set
 cb_pred_list = []
-for u, m, r in test_set[:500]:
+for u, m, r in test_set:
     est = cb_predict(u, m)
     cb_pred_list.append((u, m, r, est))
 # Compute RMSE/MAE manually
