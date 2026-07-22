@@ -66,7 +66,6 @@ def cold_start_statistics(
     }
         
 
-
 def temporal_split(
         ratings: pd.DataFrame,
         train_ratio: float = 0.8
